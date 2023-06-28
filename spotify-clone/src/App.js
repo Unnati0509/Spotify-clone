@@ -36,18 +36,52 @@ function App() {
 
         })
       })
+      spotify.getUserPlaylists().then((playlists)=>{
+        dispatch({
+          type:"SET_PLAYLISTS",
+          playlists:playlists,
+        })
+      })
+      spotify.getPlaylist('5dZdcND1dq4rnSl8lMjRHt').then(response =>
+        dispatch({
+          type: "SET_DISCOVER_WEEKLY",
+          discover_weekly: response,
+        })
+      );
+      spotify.getMyTopArtists().then((response) =>
+      dispatch({
+        type: "SET_TOP_ARTISTS",
+        top_artists: response,
+      })
+    );
+
+    dispatch({
+      type: "SET_SPOTIFY",
+      spotify: spotify,
+    });
+
+    spotify.getMe().then((user) => {
+      dispatch({
+        type: "SET_USER",
+        user,
+      });
+    });
+
+    spotify.getUserPlaylists().then((playlists) => {
+      dispatch({
+        type: "SET_PLAYLISTS",
+        playlists,
+      });
+    });
     }
 
-  },[]);
+  },[token, dispatch]);
   // console.log('🤠',user);
   // console.log('👾',token);
   return (
     <div className='app'>
-    {
-      token ?<Player spotify={spotify} /> 
-
-      :  <Login/>
-    }
+     {!token && <Login />}
+      {token && <Player spotify={spotify} />}
      
     </div>
   )
